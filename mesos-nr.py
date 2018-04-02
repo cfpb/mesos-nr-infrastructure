@@ -69,7 +69,7 @@ if __name__ == '__main__':
             default_port = 5050
         else:
             default_port = 5051
-        metrics_endpoint = 'https://%s:{port}/metrics/snapshot' % (
+        metrics_endpoint = 'https://%s:%s/metrics/snapshot' % (
             socket.gethostname(), default_port)
 
     session = authenticate(args.auth_endpoint, args.username, args.password)

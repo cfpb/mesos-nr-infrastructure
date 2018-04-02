@@ -36,7 +36,7 @@ def format_metrics(metrics, role, whitelist=None):
     if whitelist:
         metrics = {k: v for k, v in metrics.items() if k in whitelist}
 
-    document = {"name": "gov.cfpb.mesos",
+    document = {"name": "org.apache.mesos",
                 "protocol_version": "1",
                 "integration_version": "1.0.0",
                 "metrics": [metrics]
@@ -52,8 +52,6 @@ if __name__ == '__main__':
     # defaults assume we are *on* the host we are checking metrics for
     # and spartan/mesos-DNS is sane (which allows 'leader.mesos' to resolve)
     default_auth_endpoint = 'https://leader.mesos/acs/api/v1/auth/login'
-    default_metrics_endpoint = 'https://%s:5051/metrics/snapshot' % (
-            socket.gethostname())
 
     parser = argparse.ArgumentParser(description='Retrieve mesos\
                                      /metrics/snapshot data, and format it for\
@@ -61,13 +59,21 @@ if __name__ == '__main__':
     parser.add_argument("role")
     parser.add_argument("username")
     parser.add_argument("password")
-    parser.add_argument("--metrics-endpoint", default=default_metrics_endpoint)
+    parser.add_argument("--metrics-endpoint") # we don't set a default here, since we need the role argument
     parser.add_argument("--auth-endpoint", default=default_auth_endpoint)
 
     args = parser.parse_args()
+    
+    if not args.metrics_endpoint:
+        if args.role.lower() == 'master':
+            default_port = 5050
+        else:
+            default_port = 5051
+        metrics_endpoint = 'https://%s:{port}/metrics/snapshot' % (
+            socket.gethostname(), default_port)
 
     session = authenticate(args.auth_endpoint, args.username, args.password)
-    metrics = get_metrics(args.metrics_endpoint, session)
+    metrics = get_metrics(metrics_endpoint, session)
 
     document = format_metrics(metrics, args.role)
 

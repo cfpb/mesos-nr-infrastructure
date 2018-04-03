@@ -76,7 +76,7 @@ if __name__ == '__main__':
     session = authenticate(args.auth_endpoint, args.username, args.password)
     metrics = get_metrics(metrics_endpoint, session)
 
-    if args.role.lower() == 'master' and metrics['master/elected']:
+    if args.role.lower() == 'master' and not metrics['master/elected']:
         # borrowed this list from the datadog mesos integration
         # https://github.com/DataDog/integrations-core/tree/master/mesos_master
         whitelist = ('system/cpus_total',

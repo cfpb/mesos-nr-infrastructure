@@ -1,0 +1,11 @@
+
+integration_name: org.apache.mesos
+instances:
+  - name: org.apache.mesos-metrics
+    command: agent
+    arguments:
+      mesos_username: my-username
+      mesos_password: password
+    labels: 
+      environment: production
+      cluster: my-cluster-name

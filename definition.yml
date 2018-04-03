@@ -1,0 +1,16 @@
+---
+name: org.apache.mesos
+protocol_version: 1
+description: Collect metric and configuration data from mesos masters and agents
+os: linux
+commands:
+        master:
+                command:
+                        - mesos-nr
+                        - master
+                prefix: integrations/mesos-master
+        agent:
+                command:
+                        - mesos-nr
+                          agent
+                prefix: integrations/mesos-agent

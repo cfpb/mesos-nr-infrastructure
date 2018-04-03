@@ -2,9 +2,9 @@
 
 import argparse
 import json
+import os
 import requests
 import socket
-import urlparse
 
 
 def authenticate(endpoint, username, password):
@@ -35,9 +35,11 @@ def rename_metric(metric_name):
 def format_metrics(metrics, role, whitelist=None):
 
     if whitelist:
-        metrics = {rename_metric(k): v for k, v in metrics.items() if k in whitelist}
+        metrics = {rename_metric(k): v for k, v
+                   in metrics.items() if k in whitelist}
     else:
         metrics = {rename_metric(k): v for k, v in metrics.items()}
+
     document = {"name": "org.apache.mesos",
                 "protocol_version": "1",
                 "integration_version": "1.0.0",
@@ -59,14 +61,14 @@ if __name__ == '__main__':
                                      /metrics/snapshot data, and format it for\
                                      New Relic Infructure')
     parser.add_argument("role")
-    parser.add_argument("username")
-    parser.add_argument("password")
-    parser.add_argument("--metrics-endpoint") # we don't set a default here, since we need the role argument
-                                              # to determine the port.
+    parser.add_argument("--metrics-endpoint")
     parser.add_argument("--auth-endpoint", default=default_auth_endpoint)
 
+    username = os.environ['MESOS_USERNAME']
+    password = os.environ['MESOS_PASSWORD']
+
     args = parser.parse_args()
-    
+
     if not args.metrics_endpoint:
         if args.role.lower() == 'master':
             default_port = 5050
@@ -75,7 +77,7 @@ if __name__ == '__main__':
         metrics_endpoint = 'https://%s:%s/metrics/snapshot' % (
             socket.gethostname(), default_port)
 
-    session = authenticate(args.auth_endpoint, args.username, args.password)
+    session = authenticate(args.auth_endpoint, username, password)
     metrics = get_metrics(metrics_endpoint, session)
 
     if args.role.lower() == 'master' and not metrics['master/elected']:
@@ -92,7 +94,7 @@ if __name__ == '__main__':
                      'registrar/log/recovered')
     else:
         whitelist = None
-        
+
     document = format_metrics(metrics, args.role, whitelist=whitelist)
 
     print(json.dumps(document))

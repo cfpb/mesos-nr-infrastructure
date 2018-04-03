@@ -28,14 +28,16 @@ def get_metrics(endpoint, session):
 
 
 def rename_metric(metric_name):
+    # dots instead of slashes, and prepend 'mesos.'
     return 'mesos.' + metric_name.replace('/', '.')
 
 
 def format_metrics(metrics, role, whitelist=None):
 
     if whitelist:
-        metrics = {k: v for k, v in metrics.items() if k in whitelist}
-
+        metrics = {rename_metric(k): v for k, v in metrics.items() if k in whitelist}
+    else:
+        metrics = {rename_metric(k): v for k, v in metrics.items()}
     document = {"name": "org.apache.mesos",
                 "protocol_version": "1",
                 "integration_version": "1.0.0",

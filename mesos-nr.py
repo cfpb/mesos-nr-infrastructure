@@ -60,6 +60,7 @@ if __name__ == '__main__':
     parser.add_argument("username")
     parser.add_argument("password")
     parser.add_argument("--metrics-endpoint") # we don't set a default here, since we need the role argument
+                                              # to determine the port.
     parser.add_argument("--auth-endpoint", default=default_auth_endpoint)
 
     args = parser.parse_args()
@@ -75,6 +76,21 @@ if __name__ == '__main__':
     session = authenticate(args.auth_endpoint, args.username, args.password)
     metrics = get_metrics(metrics_endpoint, session)
 
-    document = format_metrics(metrics, args.role)
+    if args.role.lower() == 'master' and metrics['master/elected']:
+        # borrowed this list from the datadog mesos integration
+        # https://github.com/DataDog/integrations-core/tree/master/mesos_master
+        whitelist = ('system/cpus_total',
+                     'system/load_15min',
+                     'system/load_1min',
+                     'system/load_5min',
+                     'system/mem_free_bytes',
+                     'system/mem_total_bytes',
+                     'master/elected',
+                     'master/uptime_secs',
+                     'registrar/log/recovered')
+    else:
+        whitelist = None
+        
+    document = format_metrics(metrics, args.role, whitelist=whitelist)
 
     print(json.dumps(document))

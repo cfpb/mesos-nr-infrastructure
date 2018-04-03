@@ -12,5 +12,5 @@ commands:
         agent:
                 command:
                         - mesos-nr
-                          agent
+                        - agent
                 prefix: integrations/mesos-agent

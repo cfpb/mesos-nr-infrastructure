@@ -7,7 +7,7 @@ This is a simple "custom integration" build according to the [New Relic Infrastr
 
 ## Dependencies
 
-This has been tested on RHEL 7 with Python 2.7, but *may* work in other environments. 
+This has been tested on RHEL 7 with Python 2.7, but *may* work in other environments. The python `requests` library must be installed.
 
 ## Installation
 

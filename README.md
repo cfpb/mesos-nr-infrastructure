@@ -21,6 +21,7 @@ This has been tested on RHEL 7 with Python 2.7, but *may* work in other environm
 
 If you're up and running, you should be able to see MesosMasterMetrics (or MesosAgentMetrics) in New Relic Insights. Most master metrics are only reported on the current elected leader.
 
+No data? [try turning on logging and verbose mode and seeing if there are any errors](https://docs.newrelic.com/docs/infrastructure/new-relic-infrastructure/configuration/configure-infrastructure-agent).
 
 ## Known issues
 

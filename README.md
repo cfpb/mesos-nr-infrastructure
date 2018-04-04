@@ -25,7 +25,7 @@ No data? [try turning on logging and verbose mode and seeing if there are any er
 
 ## Known issues
 
-- this currently only grabs metrics-- we haven't yet explored how to best take advantage of 'inventoty' or 'events' in New Relic Infrastructure.
+- this currently only grabs metrics-- we haven't yet explored how to best take advantage of 'inventory' or 'events' in New Relic Infrastructure.
 
 ## Getting help
 

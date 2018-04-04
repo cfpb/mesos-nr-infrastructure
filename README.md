@@ -1,56 +1,38 @@
 # Integrate mesos masters and agents with New Relic Infrastructure
 
-**Description**:  This is a simpe "custom integration" build according to the [New Relic Infrastructure SDK](https://docs.newrelic.com/docs/integrations/integrations-sdk)
-
-
-**Screenshot**: If the software has visual components, place a screenshot after the description; e.g.,
+This is a simple "custom integration" build according to the [New Relic Infrastructure SDK](https://docs.newrelic.com/docs/integrations/integrations-sdk), that grabs the [Observability Metrics](http://mesos.apache.org/documentation/latest/monitoring/) from Apache Mesos. It has only been tested in the context of [DC/OS 1.10](https://docs.mesosphere.com/1.10/monitoring/performance-monitoring/), and thus may reflect assumptions that are only true in that scenario.
 
 ![](https://raw.githubusercontent.com/cfpb/mesos-nr-infrastructure/master/screenshot.png)
 
 
 ## Dependencies
 
-This has only been tested on Python 2.7, and requires the `requests` library to be installed.
+This has been tested on RHEL 7 with Python 2.7, but *may* work in other environments. 
 
 ## Installation
 
-Detailed instructions on how to install, configure, and get the project running.
-This should be frequently tested to ensure reliability. Alternatively, link to
-a separate [INSTALL](INSTALL.md) document.
+- 'mesos-nr.py' should be copied to /var/db/newrelic-infra/custom-integrations/mesos-nr
+- 'mesos-nr-definition.yml' should be copied to /var/db/newrelic-infra/custom-integrations/mesos-nr-definition.yml
+- the approprite sample configuration (master or agent) should be copied to /etc/newrelic-infra/integrations.d/mesos-nr-config.yml, and edited to reflect a working set of mesos credentials, and your desired [labels](https://docs.newrelic.com/docs/integrations/integrations-sdk/file-specifications/integration-configuration-file-specifications)
+- restart the newrleic-infra service. On RHEL 7, that looks like `systemctl restart newrelic-infra`
 
-## Configuration
-
-If the software is configurable, describe it in detail, either here or in other documentation to which you link.
 
 ## Usage
 
-Show users how to use the software.
-Be specific.
-Use appropriate formatting when showing code snippets.
+If you're up and running, you should be able to see MesosMasterMetrics (or MesosAgentMetrics) in New Relic Insights. Most master metrics are only reported on the current elected leader.
 
-## How to test the software
-
-If the software includes automated tests, detail how to run those tests.
 
 ## Known issues
 
-Document any known significant shortcomings with the software.
+- this currently only grabs metrics-- we haven't yet explored how to best take advantage of 'inventoty' or 'events' in New Relic Infrastructure.
 
 ## Getting help
-
-Instruct users how to get help with this software; this might include links to an issue tracker, wiki, mailing list, etc.
-
-**Example**
 
 If you have questions, concerns, bug reports, etc, please file an issue in this repository's Issue Tracker.
 
 ## Getting involved
 
-This section should detail why people should get involved and describe key areas you are
-currently focusing on; e.g., trying to get feedback on features, fixing certain bugs, building
-important pieces, etc.
-
-General instructions on _how_ to contribute should be stated with a link to [CONTRIBUTING](CONTRIBUTING.md).
+Pull requests welcome! See [CONTRIBUTING](CONTRIBUTING.md) for more.
 
 
 ----
@@ -65,6 +47,4 @@ General instructions on _how_ to contribute should be stated with a link to [CON
 
 ## Credits and references
 
-1. Projects that inspired you
-2. Related projects
-3. Books, papers, talks, or other sources that have meaningful impact or influence on this project
+I learned quite a bit by looking at [DataDog's mesos integrations](https://github.com/DataDog/integrations-core/tree/master/mesos_master/datadog_checks)
